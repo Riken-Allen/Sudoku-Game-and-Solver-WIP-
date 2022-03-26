@@ -159,15 +159,23 @@ void SudokuBox::initialize(Texture* cellTexture, Texture* cellTextureHighlight, 
 bool SudokuBox::initSolver() {
 	int x = 0;
 	int y = 0;
+	bool full = true;
 	//std::cout << "x: " << x << "  y: " << y << std::endl;
 	int number = 0;
 
-	if (isEmpty() == false) {
-		//std::cout << "Board is full!";
-		solved = true;
+	// Check if empty
+	for (int i = 9; i < 18; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (cells[i][j].cellNumber == 0) {
+				full = false;
+				std::cout << "If empty is false" << std::endl;
+			}
+		}
+	} 
+	if (full == true) {
 		return true;
 	}
-
+	// Find blank
 	for (int i = 9; i < 18; i++) {
 		for (int j = 0; j < 9; j++) {
 			if (cells[i][j].cellNumber == 0) {
@@ -211,17 +219,26 @@ void SudokuBox::initNums() {
 				while (filled == false) {
 					// Generate a random number. IMPORTANT: If that number is valid in the space specifically, then put it there.
 					randomNum = rand() % 10;
-					if (isValid(cells[x][y].gridPosition, randomNum, cells[x][y].boxNumber) == true) {
-						cells[x][y].numberText.UpdateString(std::to_string(randomNum));
-						cells[x][y].cellNumber = randomNum;
-						cells[x][y].canChange = false;
-
+					if (isValid(cells[x+9][y].gridPosition, randomNum, cells[x+9][y].boxNumber) == true) {
+						cells[x+9][y].cellNumber = randomNum;
+						
 						// This will check if the generated number will make the board impossible to solve or not.
 						if (initSolver() == true) {
 							filled = true;
+							cells[x + 9][y].numberText.UpdateString(std::to_string(randomNum));
+							cells[x + 9][y].canChange = false;
+							cells[x][y].cellNumber = cells[x + 9][y].cellNumber;
+							cells[x][y].numberText.UpdateString(std::to_string(cells[x+9][y].cellNumber));
+							cells[x][y].canChange = false;
 						}
 						else {
+							for (int i = 0; i < 9; i++) {
+								for (int j = 0; j < 9; j++) {
+									cells[i + 9][j].cellNumber = cells[i][j].cellNumber;
+								}
+							}
 							filled = false;
+							cells[x + 9][y].cellNumber = 0;
 						}
 					}
 					
@@ -234,12 +251,6 @@ void SudokuBox::initNums() {
 					cells[x][y].cellNumber = 0;
 				}*/
 			}
-		}
-	}
-	// Put those numbers into the "second board" that isn't visible during play, but is controlling the logic - WIP.
-	for (int x = 0; x < 9; x++) {
-		for (int y = 0; y < 9; y++) {
-			cells[x][y] = cells[x + 9][y];
 		}
 	}
 	
@@ -428,7 +439,7 @@ bool SudokuBox::isValid(Vector2i currentPos, int Num, int boxNumber) {
 // Find a cell that doesn't contain a number.
 sf::Vector2i SudokuBox::findBlank() {
 	sf::Vector2i coords = {0, 0};
-	for (int i = 9; i < 18; i++) {
+	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
 			if (cells[i][j].cellNumber == 0) {
 				coords.y = j;
@@ -441,7 +452,7 @@ sf::Vector2i SudokuBox::findBlank() {
 }
 // Check if the board is full or not.
 bool SudokuBox::isEmpty() {
-	for (int i = 9; i < 18; i++) {
+	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
 			if (cells[i][j].cellNumber == 0) {
 				return true;
@@ -461,11 +472,11 @@ bool SudokuBox::autoSolve(sf::RenderWindow* window) {
 	if (isEmpty() == false) {
 		std::cout << "Board is full!";
 		solved = true;
-		/*for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				cells[i][j].cellSprite.setTexture(*highlightTexture);
 			}
-		}*/
+		}
 		return true;
 	}
 

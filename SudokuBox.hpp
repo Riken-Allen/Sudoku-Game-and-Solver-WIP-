@@ -102,7 +102,7 @@ class SudokuBox
 		int t = 0;
 		bool solved = false;
 
-		//Difficulty Changer. 0-10 Lower number = higher difficulty | Higher number = lower difficulty.
+		//Difficulty Changer. 0-10 Lower number = higher difficulty | Higher number = lower difficulty. If difficulty >= 11, board will start full.
 		int difficulty = 5;
 
 		Cell cells[18][9];
