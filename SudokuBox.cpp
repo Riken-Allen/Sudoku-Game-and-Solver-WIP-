@@ -168,7 +168,6 @@ bool SudokuBox::initSolver() {
 		for (int j = 0; j < 9; j++) {
 			if (cells[i][j].cellNumber == 0) {
 				full = false;
-				std::cout << "If empty is false" << std::endl;
 			}
 		}
 	} 
@@ -323,13 +322,15 @@ bool SudokuBox::isValid(Vector2i currentPos, int Num, int boxNumber) {
 	int startX = 0;
 	int startY = 0;
 	int boxNum = boxNumber;
+	int multiply = 1;
 	int i = 0;
 	if (boxNumber >= 9) {
+		multiply = 2;
 		i = 9;
 	}
 
 	//Check the x coordinate to make sure there are no duplicate numbers. If duplicates exist, then return false, else go to check Y coordinate.
-	for (int j = i; j < i*2; j++) {
+	for (int j = i; j < (9 * multiply); j++) {
 		currentNumCompare = cells[j][currentPosY].cellNumber;
 		if (currentNumCompare == currentNum && j != currentPosX) {
 			return false;
@@ -487,13 +488,13 @@ bool SudokuBox::autoSolve(sf::RenderWindow* window) {
 
 	for (number = 0; number < 9; number++)
 	{
-		std::cout << "x and y " << x << " " << y << std::endl;
 		if (isValid(cells[x][y].gridPosition, (number + 1), cells[x][y].boxNumber) == true) {
+			std::cout << "This is valid lol   x: " << x << " y: " << y << std::endl;
 			cells[x][y].cellNumber = number + 1;
 			cells[x][y].numberText.UpdateString(std::to_string(number + 1));
 			cells[x][y].cellSprite.setTexture(*highlightTexture);
 			//std::cout << "Number that we're assigning to this cell: " << (number + 1) << std::endl;
-			/*window->clear();
+			window->clear();
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					window->draw(cells[i][j].cellSprite);
@@ -505,8 +506,8 @@ bool SudokuBox::autoSolve(sf::RenderWindow* window) {
 				}
 			}
 			window->display();
-			//Sleep(25);
-			*/
+			Sleep(50);
+			
 			if (autoSolve(window) == true) {
 				return true;
 			}
