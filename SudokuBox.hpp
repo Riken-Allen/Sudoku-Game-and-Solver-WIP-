@@ -32,6 +32,7 @@ public:
 	std::string getThisString(sf::Text text) {
 		return (std::string)text.getString();
 	}
+	// Changing the colours of the text.
 	void changeColourRed() {
 		text.setFillColor(sf::Color::Red);
 	}

@@ -13,16 +13,23 @@ using sf::Clock;
 class Game
 {
 public:
+	// Textures
 	Texture cellTexture;
 	Texture cellTextureHighlight;
 	Texture errorTexture;
 	Texture clickedTexture;
 	Texture solvebuttonTexture;
+	// Font
 	Font numberFont;
+	// Window
 	RenderWindow* window;
 	static RenderWindow* swindow;
+
 	SudokuBox* board;
+
+	// Cursor
 	sf::FloatRect cursor;
+	// Timer
 	Clock timer;
 	float time;
 	bool loaded = false;

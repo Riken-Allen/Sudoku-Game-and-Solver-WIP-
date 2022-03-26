@@ -8,7 +8,7 @@
 #include "Game.hpp"
 
 
-
+// Main
 int main()
 {
 	Game g = Game();

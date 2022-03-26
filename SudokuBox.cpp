@@ -6,7 +6,7 @@
 #include <string>
 #include <Windows.h>
 
-
+// Drawing the board
 void SudokuBox::draw(sf::RenderWindow* window)
 {
 	for (int y = 0; y < 9; y++)
@@ -155,6 +155,7 @@ void SudokuBox::initialize(Texture* cellTexture, Texture* cellTextureHighlight, 
 
 	
 }
+// WIP
 bool SudokuBox::initSolver() {
 	int x = 0;
 	int y = 0;
@@ -194,23 +195,28 @@ bool SudokuBox::initSolver() {
 	return false;
 }
 
-// load the given numbers for the board. Changing the if statement will determine the difficulty.
+// Generate a board that can be solved - WIP.
 void SudokuBox::initNums() {
 	bool filled = false;
 	int randomNum = 0;
 	
 	srand(time(NULL));
+	// Loop through the whole board.
 	for (int x = 0; x < 9; x++) {
 		for (int y = 0; y < 9; y++) {
+			// Generate a random number. This is not the number being put into the board. It's determining if there will be a number in that space.
 			randomNum = rand() % 11;
 			if (randomNum < difficulty) {
+				// Sometimes the board will generate a number that will make the board impossible to solve. Make sure to find a number to fill that spot first.
 				while (filled == false) {
+					// Generate a random number. IMPORTANT: If that number is valid in the space specifically, then put it there.
 					randomNum = rand() % 10;
 					if (isValid(cells[x][y].gridPosition, randomNum, cells[x][y].boxNumber) == true) {
 						cells[x][y].numberText.UpdateString(std::to_string(randomNum));
 						cells[x][y].cellNumber = randomNum;
 						cells[x][y].canChange = false;
 
+						// This will check if the generated number will make the board impossible to solve or not.
 						if (initSolver() == true) {
 							filled = true;
 						}
@@ -230,6 +236,7 @@ void SudokuBox::initNums() {
 			}
 		}
 	}
+	// Put those numbers into the "second board" that isn't visible during play, but is controlling the logic - WIP.
 	for (int x = 0; x < 9; x++) {
 		for (int y = 0; y < 9; y++) {
 			cells[x][y] = cells[x + 9][y];
@@ -237,7 +244,7 @@ void SudokuBox::initNums() {
 	}
 	
 }
-
+// When the cursor hovers over a cell, it will highlight it.
 void SudokuBox::updateCellOnHover() {
 	if (solved == false) {
 		for (int i = 0; i < 9; i++) {
@@ -255,17 +262,20 @@ void SudokuBox::updateCellOnHover() {
 	}
 	
 }
-
+// When a cell is clicked, change the texture and allow editing of the number.
 void SudokuBox::updateCellOnClick() {
+	// Loop through the board.
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {	
+			// If the mouse is over the cell, the user clicks the mouse, and that cell is able to be changed (as in it's not part of the starting board), then continue. 
 			if (cells[i][j].highlighted == true && clicked == true && typed == true) {
 				if (cells[i][j].canChange == true) {
 					cells[i][j].cellSprite.setTexture(*clickedTexture);
 					std::string userTempInput(1, userInput);
 					cells[i][j].numberText.UpdateString(userTempInput);
 					cells[i][j].cellNumber = std::stoi(userTempInput);
-					std::cout << cells[i][j].cellNumber << std::endl;
+					//std::cout << cells[i][j].cellNumber << std::endl;
+					// If the number the user inputs is invalid, then change that number to red coloured text.
 					if (isValid(cells[i][j].gridPosition, cells[i][j].cellNumber, cells[i][j].boxNumber) == false) {
 						//std::cout << "isValid activated";
 						cells[i][j].numberText.changeColourRed();
@@ -285,6 +295,7 @@ void SudokuBox::updateCellOnClick() {
 		}
 	}
 }
+// Checking if the solve button is clicked
 void SudokuBox::updatebuttonOnClick() {
 	if (cursor->intersects(button.solvebuttonHitbox) && clicked == true) {
 		clicked = false;
@@ -292,6 +303,7 @@ void SudokuBox::updatebuttonOnClick() {
 	}
 }
 
+// Checking if the number is valid in that specific spot. No duplicates in rows, columns, or box. IMPORTANT: Doesn't check if that number will make the board unsolvable.
 bool SudokuBox::isValid(Vector2i currentPos, int Num, int boxNumber) {
 	int currentNum = Num;
 	int currentNumCompare;
@@ -413,6 +425,7 @@ bool SudokuBox::isValid(Vector2i currentPos, int Num, int boxNumber) {
 
 	return true;
 }
+// Find a cell that doesn't contain a number.
 sf::Vector2i SudokuBox::findBlank() {
 	sf::Vector2i coords = {0, 0};
 	for (int i = 9; i < 18; i++) {
@@ -426,7 +439,7 @@ sf::Vector2i SudokuBox::findBlank() {
 	}
 	return coords;
 }
-
+// Check if the board is full or not.
 bool SudokuBox::isEmpty() {
 	for (int i = 9; i < 18; i++) {
 		for (int j = 0; j < 9; j++) {
@@ -437,7 +450,7 @@ bool SudokuBox::isEmpty() {
 	}
 	return false;
 }
-
+// The auto solving algorithym. Uses the backtracking algorythm - WIP.
 bool SudokuBox::autoSolve(sf::RenderWindow* window) {
 	sf::Vector2i coords;
 	int x = 0;

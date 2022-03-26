@@ -2,9 +2,8 @@
 #include <iostream>
 
 RenderWindow* Game::swindow;
+// Loading Assets
 void Game::LoadAssets() {
-
-
 
 	cellTexture.loadFromFile("Assets/tileGrey_01.png");
 
@@ -19,6 +18,7 @@ void Game::LoadAssets() {
 	}
 	if (!numberFont.loadFromFile("Fonts/cuyabra.otf"));
 
+	// Creating the board and initializing it.
 	board = new SudokuBox();
 	board->initialize(&cellTexture, &cellTextureHighlight , &clickedTexture, &errorTexture, &numberFont, &solvebuttonTexture);
 	board->initNums();
@@ -26,6 +26,7 @@ void Game::LoadAssets() {
 	loaded = false;
 }
 
+// Initialize the window the game runs in.
 void Game::LoadWindow() {
 	window = new sf::RenderWindow(sf::VideoMode(876, 576), "Sudoku Game");
 	window->setFramerateLimit(30);
@@ -33,6 +34,7 @@ void Game::LoadWindow() {
 	Game::swindow = window;
 }
 
+// Run method
 void Game::Run() {
 	Clock timer;
 	float time = 0.0f;
