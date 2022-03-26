@@ -6,18 +6,18 @@ void Game::LoadAssets() {
 
 
 
-	cellTexture.loadFromFile("tileGrey_01.png");
+	cellTexture.loadFromFile("Assets/tileGrey_01.png");
 
-	if (!cellTextureHighlight.loadFromFile("tileGreen_01.png"));
+	if (!cellTextureHighlight.loadFromFile("Assets/tileGreen_01.png"));
 
-	if (!clickedTexture.loadFromFile("tileBlue_01.png"));
+	if (!clickedTexture.loadFromFile("Assets/tileBlue_01.png"));
 
-	if (!errorTexture.loadFromFile("tileRed_01.png"));
+	if (!errorTexture.loadFromFile("Assets/tileRed_01.png"));
 
-	if (!solvebuttonTexture.loadFromFile("SolveButton.png")) {
+	if (!solvebuttonTexture.loadFromFile("Assets/SolveButton.png")) {
 		std::cout << "Failed to load solve button" << std::endl;
 	}
-	if (!numberFont.loadFromFile("cuyabra.otf"));
+	if (!numberFont.loadFromFile("Fonts/cuyabra.otf"));
 
 	board = new SudokuBox();
 	board->initialize(&cellTexture, &cellTextureHighlight , &clickedTexture, &errorTexture, &numberFont, &solvebuttonTexture);

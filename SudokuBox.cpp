@@ -132,7 +132,7 @@ void SudokuBox::initialize(Texture* cellTexture, Texture* cellTextureHighlight, 
 					// set cell position
 					cells[x][y].position = pos;
 					cells[x][y].gridPosition = sf::Vector2i(x, y);
-					std::cout << "x: " << cells[x][y].gridPosition.x << " y: " << cells[x][y].gridPosition.y << std::endl;
+					std::cout << "x: " << cells[x][y].gridPosition.x << " y: " << cells[x][y].gridPosition.y << " Second time" << std::endl;
 
 					cells[x][y].cellNumber = 0;
 
@@ -200,7 +200,7 @@ void SudokuBox::initNums() {
 	int randomNum = 0;
 	
 	srand(time(NULL));
-	for (int x = 9; x < 18; x++) {
+	for (int x = 0; x < 9; x++) {
 		for (int y = 0; y < 9; y++) {
 			randomNum = rand() % 11;
 			if (randomNum < difficulty) {
@@ -210,6 +210,7 @@ void SudokuBox::initNums() {
 						cells[x][y].numberText.UpdateString(std::to_string(randomNum));
 						cells[x][y].cellNumber = randomNum;
 						cells[x][y].canChange = false;
+
 						if (initSolver() == true) {
 							filled = true;
 						}
@@ -414,7 +415,7 @@ bool SudokuBox::isValid(Vector2i currentPos, int Num, int boxNumber) {
 }
 sf::Vector2i SudokuBox::findBlank() {
 	sf::Vector2i coords = {0, 0};
-	for (int i = 0; i < 9; i++) {
+	for (int i = 9; i < 18; i++) {
 		for (int j = 0; j < 9; j++) {
 			if (cells[i][j].cellNumber == 0) {
 				coords.y = j;
@@ -427,7 +428,7 @@ sf::Vector2i SudokuBox::findBlank() {
 }
 
 bool SudokuBox::isEmpty() {
-	for (int i = 0; i < 9; i++) {
+	for (int i = 9; i < 18; i++) {
 		for (int j = 0; j < 9; j++) {
 			if (cells[i][j].cellNumber == 0) {
 				return true;
@@ -445,13 +446,13 @@ bool SudokuBox::autoSolve(sf::RenderWindow* window) {
 	int number = 0;
 
 	if (isEmpty() == false) {
-		//std::cout << "Board is full!";
+		std::cout << "Board is full!";
 		solved = true;
-		for (int i = 0; i < 9; i++) {
+		/*for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				cells[i][j].cellSprite.setTexture(*highlightTexture);
 			}
-		}
+		}*/
 		return true;
 	}
 
@@ -462,7 +463,7 @@ bool SudokuBox::autoSolve(sf::RenderWindow* window) {
 
 	for (number = 0; number < 9; number++)
 	{
-		
+		std::cout << "x and y " << x << " " << y << std::endl;
 		if (isValid(cells[x][y].gridPosition, (number + 1), cells[x][y].boxNumber) == true) {
 			cells[x][y].cellNumber = number + 1;
 			cells[x][y].numberText.UpdateString(std::to_string(number + 1));
